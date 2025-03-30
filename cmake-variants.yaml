@@ -1,0 +1,34 @@
+buildType:
+  default: Develop
+  choices:
+    Release:
+      short: Release
+      long: Optimize generated code
+      buildType: Release
+    Debug:
+      short: Debug
+      long: Emit debug information and don't optimize
+      buildType: Debug
+board:
+  # Fill name of your targer which has to corespond to
+  # target name in targets.json5 file or custom_targets.json5 in case of custom target.
+  # For simplified just replace every occurrence of YOUR_MBED_TARGET with Mbed target name. 
+  # For example LPC1768 or NUCLEO_L452RE_P
+  default: Raspberry_Pi_Pico # default variant (choose) from below
+  choices:
+    Raspberry_Pi_Pico: # Name of one variant
+      short: RP2040 # Short name of the variant
+      settings:
+        MBED_TARGET: RASPBERRY_PI_PICO # Your mbed target name from targets.json5 file
+        UPLOAD_METHOD: PICOTOOL
+    TINY2040: # Name of one variant
+      short: TINY2040 # Short name of the variant
+      settings:
+        MBED_TARGET: TINY2040 # Your mbed target name from targets.json5 file
+        UPLOAD_METHOD: PICOTOOL
+    QT_PY_RP2040: # Name of one variant
+      short: QT_PY_RP2040 # Short name of the variant
+      settings:
+        MBED_TARGET: QT_PY_RP2040 # Your mbed target name from targets.json5 file
+        UPLOAD_METHOD: PICOTOOL
+
