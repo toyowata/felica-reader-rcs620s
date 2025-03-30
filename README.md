@@ -4,7 +4,31 @@
 
 FeliCa リーダー・ライターを使用したSuica/PASMO履歴リーダです。
 
-USBケーブルでPaspberry Pi picoとパソコンと接続し、履歴データを表示させることができます。I2C接続LCDを付ければ、現在の残高を表示します。残高表示は、Suica, PASMO, Edy, nanaco, wonに対応しています。
+USBケーブルでPaspberry Pi picoとパソコンと接続し、履歴データを表示させることができます。I2C接続LCDを付ければ、現在の残高を表示します。残高表示は、以下のFelica対応ICカードに対応しています。
+
+* Suica
+    * ICOCA
+    * TOICA
+    * Kitaca
+    * はやかけん
+    * AOPASS
+    * iGUCA
+    * Iwate Green Pass
+    * odeca
+    * SUGOCA
+    * cherica
+    * totra
+    * manaca
+    * SAPICA
+    * Welcome Suica
+* PASMO
+* Edy
+* nanaco
+* won
+* nimoca
+* ecomayca
+* PiTaPa
+* PASPY
 
 また、AS-289R2プリンタシールドを接続すると、Suica/PASMO履歴データを印字することができます。
 
@@ -25,7 +49,7 @@ https://www.switch-science.com/catalog/2553/
 
 Pasberry Pi picoと他の部品は以下のように接続してください。
 
-|Rasberry Pi pico|RC-S602S|I2C LCD|AS-289R2|
+|Rasberry Pi pico|RC-S620/S|I2C LCD|AS-289R2|
 |---|---|---|---|
 |GPIO4 (pin 6)|||RxD1 (D1)|
 |VSYS (pin 39)|||5V|
@@ -38,9 +62,13 @@ Pasberry Pi picoと他の部品は以下のように接続してください。
 
 # 必要なツールのインストール
 
-## Mbed CLI 1
-Mbed CLIは、以下のドキュメントを参照にインストールしてください。コンパイラは、GCC Arm Embedded Compiler を使用して動作確認しています。  
-https://os.mbed.com/docs/mbed-os/v6.12/build-tools/install-and-set-up.html
+## ツールチェインのインストール
+以下の情報を参照して、ビルドに使用するツールチェインをインストールしてください。
+https://github.com/mbed-ce/mbed-os/wiki/Toolchain-Setup-Guide
+
+## pico-sdk
+以下のサイトを参考にしてください。  
+https://github.com/raspberrypi/pico-sdk
 
 ## picotool
 以下のサイトを参考にしてください。  
@@ -52,7 +80,7 @@ https://github.com/raspberrypi/picotool
 以下のコマンドでリポジトリをクローンして、ビルドします。
 
 ```
-$ git clone https://github.com/toyowata/felica-reader-rcs620s
+$ git clone --recursive https://github.com/toyowata/felica-reader-rcs620s
 $ cd felica-reader-rcs620s
 $ mkdir build && cd build
 $ cmake .. -GNinja -DMBED_TARGET=TINY2040
@@ -68,7 +96,7 @@ $ ninja flash-felica-reader-rcs620s
 
 ## プログラムの実行
 
-プログラム書き込み後、USBケーブルを抜き差しするかリセットボタンを押してプログラムを起動します。  
+プログラム書き込み後、自動的にリセットされプログラムが起動します。  
 リセット後、3秒以内にBOOTスイッチを押すと、USBシリアルターミナルと接続するモードに移行します。
 TeraTerm, CoolTerm等のシリアルターミナルソフトウェアでパソコンと接続します（115200,8,N,1）。日本語を表示するので、UTF8が表示できるモードに設定してください。  
 FeliCa リーダー・ライター上にSuicaを乗せると、履歴情報が表示されます。
@@ -117,11 +145,12 @@ C7 46 00 00 28 2C 5C 8A BC 67 A8 0B 00 00 07 00
 ## 注意点と既知の問題
 
 ### リセット方法
-リセット用のタクトスイッチを付けると便利です  
+リセット用のタクトスイッチを付けると便利です。  
 https://nuneno.cocolog-nifty.com/blog/2021/03/post-c5ccb6.html
 
 ### Mbed OSのバージョン
-現在このプログラムで使用しているMbed OSは、本家にマージされる前の[開発版ブランチ](https://github.com/arduino/mbed-os/tree/rp2040_pr)を使用していますので、正常に動作しない場合があります。
+現在このプログラムで使用しているMbed OSは、Mbed CE (Community Edition) 版を使用しています。
+https://github.com/mbed-ce/mbed-os
 
 ### パソコンとのUSBシリアル接続
 リセット後、3秒以内にBOOTスイッチを押すと、USBシリアルターミナルと接続するモードに移行します。
@@ -146,4 +175,5 @@ https://github.com/toyowata/csv2bin
 
 ### 制約事項
 * Mbed CLIまたは、CLI2 でのビルドはサポートしていません
+* オリジナルのMbed OSを使用したい場合は、[こちら](https://github.com/toyowata/suica-reader-rcs620s)のリポジトリのコードを使用してください
 * 誤動作を防ぐために、同じカードを連続して読み込むことはできません。同じカードを読み込む場合は、リセットを行ってください。
